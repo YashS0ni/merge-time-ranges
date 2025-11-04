@@ -8,21 +8,29 @@
 
 const mergeTimeRanges = (ranges, threshold) => {
   const n = ranges.length;
+
+  // Return range if empty or has a single range
   if (n <= 1) {
     return ranges;
   }
-  ranges.sort((a, b) => a[0] - b[0])
+
+  // Sort unsorted ranges
+  ranges.sort((a, b) => a[0] - b[0]);
+
+  // Merge ranges
   const result = [];
   for (let i = 0; i < n; i++) {
     let start = ranges[i][0];
     let end = ranges[i][1];
+
     if (start > end || typeof start != 'number' || typeof end != 'number') {
-      console.log('invalid range value')
-      return null;
+      throw new TypeError("Invalid range value");
     }
+
     if (result.length && end <= result[result.length - 1][1] + threshold) {
       continue;
     }
+    
     for (let j = i + 1; j < n; j++) {
       if (ranges[j][0] <= end + threshold) {
         end = Math.max(ranges[j][1], end)
